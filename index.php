@@ -3,64 +3,32 @@
     <head>
         <meta charset="utf-8">
         <title>Pokemon</title>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <style type="text/css" media="screen">
-                body{
-                    display : inline-block;
-                }
-                div{
-                    display : inline-block;
-                    vertical-align:top;
-                }
-                #pokemonInfo{
-                    width: 340px;
-                    border : 10px solid red;
-                    padding: 10px 30px;
-                }
-                #pokemonImages{
-                    width: 1000px;
-                }
         </style>
-        <script type="text/javascript" charset="utf-8">
-                $(document).ready(function(){
-                    $("img").click(function(){
-                        $.get("http://pokeapi.co/api/v1/pokemon/" + this.id + "/", function(res){
-                            console.log(res);
-                            console.log(res.height);
-                            console.log(res.weight);
-                            $("#name").empty();
-                            $("#name").append("<li>" + res.name + "</li>");
-                            $("#types").empty();
-                            $("#types").append("<li>" + res.types[0].name + "</li>");
-                            $("#types").append("<li>" + res.types[1].name + "</li>");
-                            $("#height").empty();
-                            $("#height").append("<li>" + res.height + "</li>");
-                            $("#weight").empty();
-                            $("#weight").append("<li>" + res.weight + "</li>");
-                        },"json");
-    });
-}); 
+        <script type="text/javascript" >
+            $(document).ready(function(){
+                $('form').submit(function(){
+                    var url = this.action + $('#search_field').val();
+                    var location = $('#search_field').val();
+                    $.get(url, function(res){
+                        //console.log(res.main.temp); // T(K) × 9/5 - 459.67 - converting kelvin to farenheit
+                        var farenheit = ((res.main.temp) * 9 / 5 ) - 459.67;
+                        farenheit = Math.ceil(farenheit);
+                        console.log("the temperature in farenheit is " + farenheit);
+                        $('body > p').empty();
+                        $('body').append("<p>" + location + "</p>");
+                        $('body').append("<p>Temperature: " + farenheit +  "</p>");
+                    },"json");
+                    return false;
+                });
+            });
         </script>
     </head>
     <body>
-        <div id="pokemonImages">
-            <script type="text/javascript" charset="utf-8">
-for(var i = 1 ; i < 151 ; i++){
-    document.writeln("<img src=http://pokeapi.co/media/img/" + i + ".png id=" + i + ">"); 
-}
-            </script>
-        </div>
-        <div id="pokemonInfo">
-            <h3 id="name"></h3>
-            <h3>Types</h3>
-                <ul id="types">
-                </ul>
-            <h3>Height</h3>
-                <ul id="height">
-                </ul>
-            <h3>Weight</h3>
-                <ul id="weight">
-                </ul>
-        </div>
+        <form action="http://api.openweathermap.org/data/2.5/weather?q=" method="get" accept-charset="utf-8">
+            <input type="text" value="" name="search_field" id="search_field">
+            <input type="submit" value="Search Weather" name="Search Weather">
+        </form>
     </body>
 </html>
